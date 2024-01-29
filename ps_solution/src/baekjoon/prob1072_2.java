@@ -17,6 +17,7 @@ public class prob1072_2 {
 
         if (target >= 99) {
             System.out.println(-1);
+            sc.close();
             return;
         }
 
@@ -36,5 +37,7 @@ public class prob1072_2 {
             }
         }
         System.out.println(result);
+
+        sc.close();
     }
 }
