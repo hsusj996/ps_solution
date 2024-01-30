@@ -13,6 +13,7 @@ public class prob1072 {
 
         if (target >= 99) {
             System.out.println(-1);
+            sc.close();
             return;
         }
 
@@ -37,5 +38,7 @@ public class prob1072 {
             }
         }
         System.out.println(Integer.parseInt(sb.toString()) + 1);
+
+        sc.close();
     }
 }

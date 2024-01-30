@@ -30,5 +30,6 @@ public class prob11053 {
         }
 
         System.out.println(max);
+        sc.close();
     }
 }

@@ -42,8 +42,6 @@ public class prob1149_2 {
             }
         }
 
-        int s = Math.min(3, 2);
-        int a = min_cost[0].length;
         return min_cost[N][color];
     }
 }

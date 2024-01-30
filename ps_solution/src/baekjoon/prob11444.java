@@ -2,7 +2,6 @@ package baekjoon;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.util.*;
 
 public class prob11444 {
   static final int MOD = 1_000_000_007;
