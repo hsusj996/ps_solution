@@ -22,18 +22,10 @@ public class prob23290 {
     }
   }
 
-  // static class Fish extends cdnt {
-  // int direction;
-
-  // Fish(int row, int col, int direction) {
-  // super(row, col);
-  // this.direction = direction;
-  // }
-  // }
-
   static cdnt sharkPos;
   static List<Integer>[][] FishMap = new ArrayList[5][5];
   static List<Integer>[][] FishMapTemp = new ArrayList[5][5];
+  static boolean[][] visited;
   static int[][] map = new int[5][5];
   static int ans = 0;
   static int[] d8_row = { 0, 0, -1, -1, -1, 0, 1, 1, 1 };
@@ -85,8 +77,8 @@ public class prob23290 {
   }
 
   private static void Simulation() {
-    for(int i=1;i<=4;i++){
-      for(int j=1;j<=4;j++){
+    for (int i = 1; i <= 4; i++) {
+      for (int j = 1; j <= 4; j++) {
         FishMapTemp[i][j] = new ArrayList<>();
         FishMapTemp[i][j].addAll(FishMap[i][j]);
       }
@@ -121,17 +113,20 @@ public class prob23290 {
 
   private static void MoveShark() {
     map[sharkPos.row][sharkPos.col] = 0;
+    visited = new boolean[5][5];
 
     sharkRoute = new int[3];
     routeBuffer = new int[3];
     maxOfEatingFish = 0;
+
+    visited[sharkPos.row][sharkPos.col] = true;
     BackTrackingShark(sharkPos.row, sharkPos.col, 0, 0);
 
     for (int i = 0; i < 3; i++) {
       sharkPos.row += d4_row[sharkRoute[i]];
       sharkPos.col += d4_col[sharkRoute[i]];
 
-      if(FishMap[sharkPos.row][sharkPos.col].size() > 0){
+      if (FishMap[sharkPos.row][sharkPos.col].size() > 0) {
         map[sharkPos.row][sharkPos.col] = 3;
       }
       FishMap[sharkPos.row][sharkPos.col].clear();
@@ -152,7 +147,7 @@ public class prob23290 {
       int new_row = row + d4_row[i];
       int new_col = col + d4_col[i];
 
-      if (IsOutBound(new_row, new_col)) {
+      if (IsOutBound(new_row, new_col) || visited[new_row][new_col]) {
         continue;
       }
 
@@ -179,7 +174,8 @@ public class prob23290 {
         for (Iterator<Integer> iter = FishMap[i][j].iterator(); iter.hasNext();) {
           int fish = iter.next();
           for (int k = 8; k > 0; k--) {
-            int direction = (fish + k) % 8 == 0 ? 1 : (fish + k) % 8;
+            // int direction = (fish + k) % 9 == 0 ? 1 : (fish + k) % 9;
+            int direction = (fish + k) % 8 == 0 ? 8 : (fish + k) % 8;
             if (isPossible(i, j, direction)) {
               NewMap[i + d8_row[direction]][j + d8_col[direction]].add(direction);
               iter.remove();
@@ -203,5 +199,4 @@ public class prob23290 {
   private static boolean IsOutBound(int row, int col) {
     return row < 1 || row > 4 || col < 1 || col > 4;
   }
-
 }
