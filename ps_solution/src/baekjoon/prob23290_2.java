@@ -129,18 +129,19 @@ public class prob23290_2 {
       int new_row = row + d_row_shark[i];
       int new_col = col + d_col_shark[i];
 
-      if (IsOutBound(new_row, new_col) || visited[new_row][new_col]) {
+      if (IsOutBound(new_row, new_col)) {
         continue;
       }
 
-      visited[new_row][new_col] = true;
       RouteBuffer[depth] = i;
       int FishesOnSpace = 0;
+      int[] arrBuf = FishMap[new_row][new_col].clone();
       for (int j = 1; j <= 8; j++) {
         FishesOnSpace += FishMap[new_row][new_col][j];
+        FishMap[new_row][new_col][j] = 0;
       }
       SharkBackTracking(new_row, new_col, EatenFishCnt + FishesOnSpace, depth + 1);
-      visited[new_row][new_col] = false;
+      FishMap[new_row][new_col] = arrBuf;
     }
   }
 
@@ -156,6 +157,8 @@ public class prob23290_2 {
         }
       }
     }
+
+    FishMap = tmpMap;
   }
 
   private static void MoveFish(int row, int col, int direction) {
@@ -165,11 +168,13 @@ public class prob23290_2 {
       int new_col = col + d_col_fish[newDirection];
 
       if (IsPossibleMove(new_row, new_col)) {
-        tmpMap[new_row][new_col][newDirection] = FishMap[row][col][direction];
+        tmpMap[new_row][new_col][newDirection] += FishMap[row][col][direction];
         FishMap[row][col][direction] = 0;
         break;
       }
     }
+
+    tmpMap[row][col][direction] += FishMap[row][col][direction];
   }
 
   private static boolean IsPossibleMove(int row, int col) {
