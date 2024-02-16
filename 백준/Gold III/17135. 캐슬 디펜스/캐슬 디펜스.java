@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -24,7 +26,7 @@ public class Main {
 
 	static int N, M, D;
 	static int[][] map;
-	static int max = 0;
+	static int max = Integer.MIN_VALUE;
 	static int enemyCnt = 0;
 	static int[] d_row = { 0, -1, 0 };
 	static int[] d_col = { -1, 0, 1 };
@@ -111,24 +113,24 @@ public class Main {
 		max = Math.max(max, killCnt);
 	}
 
-	private static int MoveEnemy(int[][] tmpMap) {
+	private static int MoveEnemy(int[][] map) {
 		int ret = 0;
 
 		for (int i = 0; i < M; i++) {
-			if (tmpMap[N - 1][i] == 1) {
+			if (map[N - 1][i] == 1) {
 				ret++;
 			}
 		}
 
 		for (int i = N - 1; i > 0; i--) {
-			tmpMap[i] = tmpMap[i - 1];
+			map[i] = map[i - 1];
 		}
-		tmpMap[0] = new int[M];
+		map[0] = new int[M];
 
 		return ret;
 	}
 
-	private static Cdnt bfs(Cdnt cdnt, int[][] tmpMap) {
+	private static Cdnt bfs(Cdnt cdnt, int[][] map) {
 		boolean[][] visited = new boolean[N + 1][M];
 		Queue<Cdnt> q = new LinkedList<>();
 		q.add(cdnt);
@@ -138,7 +140,7 @@ public class Main {
 			Cdnt cur = q.poll();
 
 			if (cur.depth >= D) {
-				break;
+				return null;
 			}
 
 			for (int i = 0; i < 3; i++) {
@@ -148,8 +150,8 @@ public class Main {
 				if (IsOutBound(newRow, newCol) || visited[newRow][newCol]) {
 					continue;
 				}
-
-				if (tmpMap[newRow][newCol] == 1) {
+				
+				if (map[newRow][newCol] == 1) {
 					return new Cdnt(newRow, newCol, cur.depth + 1);
 				}
 
