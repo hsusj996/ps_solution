@@ -22,12 +22,15 @@ public class prob16235 {
 
     public void commit() {
       this.sumEnergy += this.deadEnergy;
+      this.deadEnergy = 0;
     }
   }
 
   static int N, M, K;
   static int[][] A;
   static Ground[][] map;
+  static int[] d_row = { -1, -1, -1, 0, 0, 1, 1, 1 };
+  static int[] d_col = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -37,10 +40,16 @@ public class prob16235 {
     M = Integer.parseInt(st.nextToken());
     K = Integer.parseInt(st.nextToken());
 
-    map = new Ground[N][N];
-    for (int i = 0; i < N; i++) {
+    map = new Ground[N + 1][N + 1];
+    for (int i = 1; i <= N; i++) {
+      for (int j = 1; j <= N; j++) {
+        map[i][j] = new Ground();
+      }
+    }
+    A = new int[N + 1][N + 1];
+    for (int i = 1; i <= N; i++) {
       st = new StringTokenizer(br.readLine());
-      for (int j = 0; j < N; j++) {
+      for (int j = 1; j <= N; j++) {
         A[i][j] = Integer.parseInt(st.nextToken());
       }
     }
@@ -65,34 +74,59 @@ public class prob16235 {
   }
 
   private static void Winter() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'Winter'");
+    for (int i = 1; i <= N; i++) {
+      for (int j = 1; j <= N; j++) {
+        map[i][j].sumEnergy += A[i][j];
+      }
+    }
   }
 
   private static void Autumn() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'Autumn'");
+    for (int i = 1; i <= N; i++) {
+      for (int j = 1; j <= N; j++) {
+        for (int tree : map[i][j].treeList) {
+          if (tree % 5 == 0) {
+            for (int d = 0; d < 8; d++) {
+              int newRow = i + d_row[d];
+              int newCol = j + d_col[d];
+              if (IsOutBound(newRow, newCol)) {
+                continue;
+              }
+
+              map[newRow][newCol].treeList.add(1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private static boolean IsOutBound(int row, int col) {
+    return row < 1 || row > N || col < 1 || col > N;
   }
 
   private static void Summer() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'Summer'");
+    for (int i = 1; i <= N; i++) {
+      for (int j = 1; j <= N; j++) {
+        map[i][j].commit();
+      }
+    }
   }
 
   private static void Spring() {
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
+    for (int i = 1; i <= N; i++) {
+      for (int j = 1; j <= N; j++) {
         map[i][j].treeList.sort(null);
 
-        for (Iterator<Integer> iter = map[i][j].treeList.iterator(); iter.hasNext();) {
-          Integer tree = iter.next();
+        for (int k = 0; k < map[i][j].treeList.size(); k++) {
+          int tree = map[i][j].treeList.get(k);
 
           if (tree > map[i][j].sumEnergy) {
             map[i][j].deadEnergy += tree / 2;
-            iter.remove();
+            map[i][j].treeList.remove(k--);
           } else {
             map[i][j].sumEnergy -= tree;
-            tree++;
+            map[i][j].treeList.set(k, tree + 1);
           }
         }
       }
@@ -102,8 +136,8 @@ public class prob16235 {
   private static int SumOfTree() {
     int ret = 0;
 
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
+    for (int i = 1; i <= N; i++) {
+      for (int j = 1; j <= N; j++) {
         ret += map[i][j].treeList.size();
       }
     }
