@@ -4,15 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class prob16235 {
+  // 토지 클래스
   static class Ground {
     List<Integer> treeList;
     int sumEnergy;
-    int deadEnergy;
+    int deadEnergy; // 죽은 나무 양분 합
 
     Ground() {
       sumEnergy = 5;
@@ -20,6 +20,7 @@ public class prob16235 {
       deadEnergy = 0;
     }
 
+    // 죽은 나무로 인한 양분 획득
     public void commit() {
       this.sumEnergy += this.deadEnergy;
       this.deadEnergy = 0;
@@ -73,6 +74,7 @@ public class prob16235 {
     System.out.println(SumOfTree());
   }
 
+  // 겨울 메서드; 양분 더하기
   private static void Winter() {
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
@@ -81,6 +83,7 @@ public class prob16235 {
     }
   }
 
+  // 가을 메서드; 5의 배수인 나무들을 탐색해서 주변에 나무 생성
   private static void Autumn() {
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
@@ -101,10 +104,7 @@ public class prob16235 {
     }
   }
 
-  private static boolean IsOutBound(int row, int col) {
-    return row < 1 || row > N || col < 1 || col > N;
-  }
-
+  // 여름 메서드; 봄에 기록한 죽은 나무 양분 더하기
   private static void Summer() {
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
@@ -113,6 +113,8 @@ public class prob16235 {
     }
   }
 
+  // 봄 메서드; 토지에 있는 나무들을 나이 순 정렬한 뒤 양분 주기
+  // 양분을 주지 못한다면 해당 나무 제거 후 토지의 죽은 나무 양분 합하기
   private static void Spring() {
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
@@ -143,5 +145,9 @@ public class prob16235 {
     }
 
     return ret;
+  }
+
+  private static boolean IsOutBound(int row, int col) {
+    return row < 1 || row > N || col < 1 || col > N;
   }
 }
