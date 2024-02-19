@@ -34,6 +34,15 @@ public class prob21611 {
     for (int i = 0; i < M; i++) {
       st = new StringTokenizer(br.readLine());
       int d = Integer.parseInt(st.nextToken());
+      if(d == 1){
+        d = 3;
+      } else if(d == 2){
+        d = 1;
+      } else if(d == 3){
+        d = 0;
+      } else{
+        d= 2;
+      }
       int s = Integer.parseInt(st.nextToken());
 
       Blizzard(d, s);
@@ -72,8 +81,8 @@ public class prob21611 {
     List<Integer> ret = new ArrayList<>();
     int row = N / 2;
     int col = N / 2;
-    int d = 3;
-    for (int i = 1; i <= N; i++) {
+    int d = 0;
+    for (int i = 1; i < N; i++) {
       for (int j = i; j > 0; j--) {
         row += d_row[d];
         col += d_col[d];
@@ -93,7 +102,7 @@ public class prob21611 {
       d %= 4;
     }
 
-    for (int j = N; j > 0; j--) {
+    for (int j = N - 1; j > 0; j--) {
       row += d_row[d];
       col += d_col[d];
       ret.add(map[row][col]);
@@ -106,8 +115,8 @@ public class prob21611 {
     int SharkPosRow = N / 2;
     int SharkPosCol = N / 2;
     for (int i = 1; i <= s; i++) {
-      int newRow = SharkPosRow + d_row[d] * s;
-      int newCol = SharkPosCol + d_col[d] * s;
+      int newRow = SharkPosRow + d_row[d] * i;
+      int newCol = SharkPosCol + d_col[d] * i;
 
       map[newRow][newCol] = 0;
     }
