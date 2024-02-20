@@ -41,6 +41,8 @@ public class Main {
     M = Integer.parseInt(st.nextToken());
 
     map = new int[R + 1][C + 1];
+
+    sharkList.add(null);
     for (int i = 1; i <= M; i++) {
       st = new StringTokenizer(br.readLine());
       int row = Integer.parseInt(st.nextToken());
@@ -72,7 +74,7 @@ public class Main {
     UserPos = 0;
     while (true) {
       UserPos++;
-      if (UserPos == C + 1) {
+      if (UserPos > C) {
         break;
       }
       Fishing();
@@ -85,7 +87,7 @@ public class Main {
   private static int[][] MoveSharks() {
     int[][] ret = new int[R + 1][C + 1];
 
-    for (int i = 0; i < sharkList.size(); i++) {
+    for (int i = 1; i < sharkList.size(); i++) {
       Shark cur = sharkList.get(i);
       if (!cur.alive) {
         continue;
@@ -112,20 +114,18 @@ public class Main {
         cur.row = newRow;
         cur.col = newCol;
       }
-      // 상어 움직임
 
-      // 상어 잡아먹기
+      // 잡아먹기
       if (ret[cur.row][cur.col] > 0) {
-        if (cur.size < sharkList.get(ret[cur.row][cur.col] - 1).size) {
+        if (cur.size < sharkList.get(ret[cur.row][cur.col]).size) {
           cur.alive = false;
         } else {
-          sharkList.get(ret[cur.row][cur.col] - 1).alive = false;
-          ret[cur.row][cur.col] = i + 1;
+          sharkList.get(ret[cur.row][cur.col]).alive = false;
+          ret[cur.row][cur.col] = i;
         }
       } else {
-        ret[cur.row][cur.col] = i + 1;
+        ret[cur.row][cur.col] = i;
       }
-      // 상어 잡아먹기
     }
 
     return ret;
@@ -141,7 +141,7 @@ public class Main {
         continue;
       }
 
-      Shark target = sharkList.get(map[i][UserPos] - 1);
+      Shark target = sharkList.get(map[i][UserPos]);
       target.alive = false;
       map[i][UserPos] = 0;
 
