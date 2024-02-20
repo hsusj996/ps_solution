@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class prob15685 {
+public class prob15686 {
     static int N;
     static int M;
     static int[][] city;
