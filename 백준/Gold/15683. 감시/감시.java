@@ -133,13 +133,8 @@ public class Main {
   private static void CheckSpace(cdnt now, int direction, int value) {
     while (!IsOutBound(now.row, now.col) && map[now.row][now.col] != 6) {
       map[now.row][now.col] += value;
-      try {
-        now.row += d_row[direction];
-        now.col += d_col[direction];
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      now.row += d_row[direction];
+      now.col += d_col[direction];
     }
   }
 }
