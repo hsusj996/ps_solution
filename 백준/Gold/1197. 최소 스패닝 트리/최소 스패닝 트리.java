@@ -3,93 +3,92 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-  static class Edge {
-    int from;
-    int to;
-    int weight;
+    static class Edge {
+        int from;
+        int to;
+        int weight;
 
-    public Edge(int from, int to, int weight) {
-      this.from = from;
-      this.to = to;
-      this.weight = weight;
-    }
-  }
-
-  static int V;
-  static int E;
-  static int[] parents;
-  static Edge[] edgeArr;
-  static int weightSum = 0;
-  static int cnt = 0;
-
-  public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-    StringTokenizer st = new StringTokenizer(br.readLine());
-    V = Integer.parseInt(st.nextToken());
-    E = Integer.parseInt(st.nextToken());
-
-    parents = new int[V + 1];
-    edgeArr = new Edge[E];
-
-    for (int i = 0; i < E; i++) {
-      st = new StringTokenizer(br.readLine());
-      int from = Integer.parseInt(st.nextToken());
-      int to = Integer.parseInt(st.nextToken());
-      int weight = Integer.parseInt(st.nextToken());
-
-      edgeArr[i] = new Edge(from, to, weight);
+        public Edge(int from, int to, int weight) {
+            this.from = from;
+            this.to = to;
+            this.weight = weight;
+        }
     }
 
-    Arrays.sort(edgeArr, new Comparator<Edge>() {
-      @Override
-      public int compare(Edge o1, Edge o2) {
-        return o1.weight - o2.weight;
-      }
-    });
+    static Edge[] edgeArr;
+    static int[] parents;
+    static int V, E;
+    static int weightSum = 0;
 
-    MakeSet();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    for (int i = 0; i < E; i++) {
-      if (Union(edgeArr[i].from, edgeArr[i].to)) {
-        cnt++;
-        weightSum += edgeArr[i].weight;
-      }
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        V = Integer.parseInt(st.nextToken());
+        E = Integer.parseInt(st.nextToken());
 
-      if (cnt == E - 1) {
-        break;
-      }
+        parents = new int[V + 1];
+        edgeArr = new Edge[E];
+
+        for (int i = 0; i < E; i++) {
+            st = new StringTokenizer(br.readLine());
+            edgeArr[i] = new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()),
+                    Integer.parseInt(st.nextToken()));
+        }
+
+        Arrays.sort(edgeArr, new Comparator<Edge>() {
+            @Override
+            public int compare(Edge o1, Edge o2) {
+                return o1.weight - o2.weight;
+            }
+        });
+
+        MakeSet();
+
+        int cnt = 0;
+        for (int i = 0; i < E; i++) {
+            Edge cur = edgeArr[i];
+
+            if (Union(cur.from, cur.to)) {
+                weightSum += cur.weight;
+                cnt++;
+            }
+
+            if (cnt == E - 1) {
+                break;
+            }
+        }
+
+        System.out.println(weightSum);
     }
 
-    System.out.println(weightSum);
-  }
-
-  private static void MakeSet() {
-    for (int i = 0; i < V; i++) {
-      parents[i] = i;
-    }
-  }
-
-  private static int Find(int a) {
-    if (parents[a] == a) {
-      return a;
+    private static void MakeSet() {
+        for (int i = 0; i <= V; i++) {
+            parents[i] = i;
+        }
     }
 
-    return parents[a] = Find(parents[a]);
-  }
+    private static int FindSet(int a) {
+        if (parents[a] == a) {
+            return a;
+        }
 
-  private static boolean Union(int a, int b) {
-    int aRoot = Find(a);
-    int bRoot = Find(b);
-
-    if (aRoot == bRoot) {
-      return false;
+        return parents[a] = FindSet(parents[a]);
     }
 
-    parents[bRoot] = aRoot;
-    return true;
-  }
+    private static boolean Union(int a, int b) {
+        int aRoot = FindSet(a);
+        int bRoot = FindSet(b);
+
+        if (aRoot == bRoot) {
+            return false;
+        }
+
+        parents[bRoot] = aRoot;
+        return true;
+    }
 }
