@@ -9,6 +9,13 @@
       "name": "swea5648_3",
       "request": "launch",
       "mainClass": "swea.swea5648_3",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
+      "name": "swea5648_3",
+      "request": "launch",
+      "mainClass": "swea.swea5648_3",
       "projectName": "ps_solution_bfffed62"
     },
     {
