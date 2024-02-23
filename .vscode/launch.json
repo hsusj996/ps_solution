@@ -6,6 +6,27 @@
   "configurations": [
     {
       "type": "java",
+      "name": "swea1949",
+      "request": "launch",
+      "mainClass": "swea.swea1949",
+      "projectName": "ps_solution_bfffed62"
+    },
+    {
+      "type": "java",
+      "name": "test3",
+      "request": "launch",
+      "mainClass": "swea.test3",
+      "projectName": "ps_solution_bfffed62"
+    },
+    {
+      "type": "java",
+      "name": "PrimTest",
+      "request": "launch",
+      "mainClass": "swea.PrimTest",
+      "projectName": "ps_solution_bfffed62"
+    },
+    {
+      "type": "java",
       "name": "swea5648_3",
       "request": "launch",
       "mainClass": "swea.swea5648_3",
