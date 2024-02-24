@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "swea5656",
+      "request": "launch",
+      "mainClass": "swea.swea5656",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
       "name": "prob2075",
       "request": "launch",
       "mainClass": "baekjoon.prob2075",
