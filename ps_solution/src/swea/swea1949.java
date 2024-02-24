@@ -43,8 +43,8 @@ public class swea1949 {
       N = Integer.parseInt(st.nextToken());
       K = Integer.parseInt(st.nextToken());
 
+      // 초기화
       map = new int[N][N];
-      startList = new ArrayList<>();
       maxLength = 0;
 
       for (int i = 0; i < N; i++) {
@@ -54,8 +54,27 @@ public class swea1949 {
         }
       }
 
+
+
+      // 시작점 리스트 생성
+      int maxHeight = 0;
+      startList = new ArrayList<>();
+      for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+          if (maxHeight == map[i][j]) {
+            startList.add(new cdnt(i, j, 1));
+          } else if (maxHeight < map[i][j]) {
+            maxHeight = map[i][j];
+            startList = new ArrayList<>();
+            startList.add(new cdnt(i, j, 1));
+          }
+        }
+      }
+
+      // 공사하지 않을 때 BFS
       BFS();
 
+      // 공사할 때
       for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
           for (int k = 1; k <= K; k++) {
@@ -75,29 +94,14 @@ public class swea1949 {
   }
 
   private static void BFS() {
-    int maxHeight = 0;
-
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
-        if (maxHeight == map[i][j]) {
-          startList.add(new cdnt(i, j, 1));
-        } else if (maxHeight < map[i][j]) {
-          maxHeight = map[i][j];
-          startList = new ArrayList<>();
-          startList.add(new cdnt(i, j, 1));
-        }
-      }
-    }
-
+    // 시작점마다 BFS 수행
     for (cdnt start : startList) {
       int row = start.row;
       int col = start.col;
 
       int maxDepth = 0;
-      boolean[][] visited = new boolean[N][N];
       Queue<cdnt> q = new ArrayDeque<>();
       q.add(new cdnt(row, col, 1));
-      visited[row][col] = true;
 
       while (!q.isEmpty()) {
         cdnt cur = q.poll();
@@ -107,12 +111,11 @@ public class swea1949 {
           int newRow = cur.row + d_row[i];
           int newCol = cur.col + d_col[i];
 
-          if (IsOutBound(newRow, newCol) || visited[newRow][newCol]) {
+          if (IsOutBound(newRow, newCol)) {
             continue;
           }
 
           if (map[newRow][newCol] < map[cur.row][cur.col]) {
-            visited[newRow][newCol] = true;
             q.add(new cdnt(newRow, newCol, cur.depth + 1));
           }
         }

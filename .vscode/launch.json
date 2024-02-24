@@ -6,6 +6,27 @@
   "configurations": [
     {
       "type": "java",
+      "name": "prob2075",
+      "request": "launch",
+      "mainClass": "baekjoon.prob2075",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
+      "name": "swea5658",
+      "request": "launch",
+      "mainClass": "swea.swea5658",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
+      "name": "swea1949",
+      "request": "launch",
+      "mainClass": "swea.swea1949",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
       "name": "swea1949",
       "request": "launch",
       "mainClass": "swea.swea1949",
