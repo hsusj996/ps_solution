@@ -23,8 +23,7 @@ public class swea5648_2 {
       this.existed = true;
     }
   }
-
-  static int 
+  
   static int[] d_x = { 0, 0, -1, 1 };
   static int[] d_y = { 1, -1, 0, 0 };
   static int T, N;

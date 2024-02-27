@@ -6,6 +6,7 @@
   "configurations": [
     {
       "type": "java",
+<<<<<<< HEAD
       "name": "swea4013",
       "request": "launch",
       "mainClass": "swea.swea4013",
@@ -17,6 +18,33 @@
       "request": "launch",
       "mainClass": "baekjoon.prob1753_2",
       "projectName": "ps_solution_bfffed62"
+=======
+      "name": "swea5656",
+      "request": "launch",
+      "mainClass": "swea.swea5656",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
+      "name": "prob2075",
+      "request": "launch",
+      "mainClass": "baekjoon.prob2075",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
+      "name": "swea5658",
+      "request": "launch",
+      "mainClass": "swea.swea5658",
+      "projectName": "ps_solution_bea4efb3"
+    },
+    {
+      "type": "java",
+      "name": "swea1949",
+      "request": "launch",
+      "mainClass": "swea.swea1949",
+      "projectName": "ps_solution_bea4efb3"
+>>>>>>> 61c67032ff49ee926c755eaf722d7ae6ffa2af14
     },
     {
       "type": "java",
