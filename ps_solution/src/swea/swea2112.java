@@ -15,6 +15,9 @@ public class swea2112 {
   static int[] initialSet;
   static int[][] copyBoard;
   static int min;
+  static boolean find;
+  static int[] SelectedRow;
+  static int[] SelectedColor;
 
   public static void main(String[] args) throws NumberFormatException, IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,6 +33,7 @@ public class swea2112 {
       board = new int[D][W];
       initialSet = new int[D];
       min = Integer.MAX_VALUE;
+      find = false;
 
       for (int i = 0; i < D; i++) {
         st = new StringTokenizer(br.readLine());
@@ -38,7 +42,14 @@ public class swea2112 {
         }
       }
 
-      SubSet(0);
+      for (int i = 0; i <= D; i++) {
+        SelectedRow = new int[i];
+        SelectedColor = new int[i];
+        Combi(0, 0, i);
+        if (min != Integer.MAX_VALUE) {
+          break;
+        }
+      }
 
       result.append(min).append("\n");
     }
@@ -46,7 +57,55 @@ public class swea2112 {
     System.out.println(result);
   }
 
+  private static void Combi(int prev, int depth, int targetDepth) {
+    if (depth == targetDepth) {
+      int usedCnt = SelectedRow.length;
+
+      ColorPermutation(0, usedCnt);
+
+      return;
+    }
+
+    for (int i = prev; i < D; i++) {
+      SelectedRow[depth] = i;
+      Combi(i + 1, depth + 1, targetDepth);
+    }
+  }
+
+  private static void ColorPermutation(int depth, int targetDepth) {
+    if (find) {
+      return;
+    }
+
+    if (depth == targetDepth) {
+      copyBoard = new int[D][W];
+
+      for (int i = 0; i < D; i++) {
+        copyBoard[i] = board[i].clone();
+      }
+
+      for (int i = 0; i < targetDepth; i++) {
+        Arrays.fill(copyBoard[SelectedRow[i]], SelectedColor[i]);
+      }
+
+      if (CheckPass()) {
+        min = targetDepth;
+      }
+      return;
+    }
+
+    SelectedColor[depth] = 0;
+    ColorPermutation(depth + 1, targetDepth);
+
+    SelectedColor[depth] = 1;
+    ColorPermutation(depth + 1, targetDepth);
+  }
+
   private static void SubSet(int depth) {
+    if (find) {
+      return;
+    }
+
     if (depth == D) {
       copyBoard = new int[D][W];
       int usedCnt = 0;
@@ -61,6 +120,7 @@ public class swea2112 {
       }
 
       if (CheckPass()) {
+        find = true;
         min = Math.min(min, usedCnt);
       }
 
@@ -77,18 +137,20 @@ public class swea2112 {
 
   private static boolean CheckPass() {
     for (int i = 0; i < W; i++) {
-      int cnt = 1;
+      int cnt = 0;
       int prev = copyBoard[0][i];
       boolean pass = false;
-      for (int j = 1; j < D; j++) {
+      for (int j = 0; j < D; j++) {
         if (prev == copyBoard[j][i]) {
-          if (++cnt >= K) {
-            pass = true;
-            break;
-          }
+          cnt++;
         } else {
-          prev = copyBoard[0][i];
+          prev = copyBoard[j][i];
           cnt = 1;
+        }
+
+        if (cnt >= K) {
+          pass = true;
+          break;
         }
       }
 
