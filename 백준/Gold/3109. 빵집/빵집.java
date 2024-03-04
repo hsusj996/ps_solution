@@ -1,84 +1,68 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int R;
-	static int C;
+	static int N, M;
 	static char[][] map;
-	static boolean[][] visited;
-	static int cnt = 0;
-	static int[] d_row = { -1, 0, 1 };
-	static int[] route;
-	static boolean flag;
-
-	static class Cdnt {
-		int row;
-		int col;
-
-		public Cdnt(int row, int col) {
-			super();
-			this.row = row;
-			this.col = col;
-		}
-	}
-
+	static boolean[][][] visit;
+	static int result = 0;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringBuilder sb = new StringBuilder();
+
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		R = Integer.parseInt(st.nextToken());
-		C = Integer.parseInt(st.nextToken());
-
-		map = new char[R][C];
-		visited = new boolean[R][C];
-		route = new int[C];
-		for (int i = 0; i < R; i++) {
-			String s = br.readLine();
-			for (int j = 0; j < C; j++) {
-				map[i][j] = s.charAt(j);
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		
+		map = new char[N][M];
+		visit = new boolean[N][M][3];
+		for(int i=0; i<N; i++) {
+			String str = br.readLine();
+			for(int j=0; j<M; j++) {
+				map[i][j] = str.charAt(j);
 			}
 		}
-
-		for (int i = 0; i < R; i++) {
-			flag = false;
-			DFS(new Cdnt(i, 0));
-		}
-
-		System.out.println(cnt);
-	}
-
-	private static void DFS(Cdnt now) {
-		visited[now.row][now.col] = true;
-		if (now.col == C - 1) {
-			cnt++;
-			flag = true;
-			return;
-		}
-
-		for (int i = 0; i < 3; i++) {
-			if (flag) {
-				return;
-			}
-			int nextRow = now.row + d_row[i];
-			int nextCol = now.col + 1;
-
-			if (IsPossible(nextRow, nextCol)) {
-				DFS(new Cdnt(nextRow, nextCol));
+		
+		for(int i=0; i<N; i++) {
+			if( dfs(i, 0) ) {
+				result++;
 			}
 		}
+		
+		sb.append(result);
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
 	}
-
-	private static boolean IsPossible(int row, int col) {
-		if (row < 0 || row >= R || col < 0 || col >= C) {
-			return false;
+	
+	static boolean dfs(int i, int j) {
+		if(j == M-1) {
+			return true;
 		}
-
-		if (map[row][col] == 'x' || visited[row][col]) {
-			return false;
+		
+		int[][] direct = {{-1,1}, {0,1} , {1,1}};
+			
+		for(int k=0; k<3; k++) {
+			int row = i + direct[k][0];
+			int col = j + direct[k][1];
+			
+			if(row >= 0 && row<N && col >=0 && col<M) {
+				if(map[row][col] != 'x') {
+					if(visit[row][col][k]) return false;
+					map[row][col] = 'x';
+					if(!dfs(row, col)) {
+						map[row][col] = '.';
+						visit[row][col][k] = true;
+					}
+					else return true;
+				}
+			}
 		}
-
-		return true;
+		return false;	
 	}
-
 }
