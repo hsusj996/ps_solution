@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -13,16 +14,17 @@ public class prob17142 {
   static final int[][] d = { { -1, 0, 1, 0 }, { 0, 1, 0, -1 } };
   static final int INF = 1_000_000;
 
-  static class Node {
+  static class Virus {
     int x;
     int y;
     int depth;
 
-    public Node(int x, int y, int depth) {
+    public Virus(int x, int y, int depth) {
       this.x = x;
       this.y = y;
       this.depth = depth;
     }
+
   }
 
   static StringTokenizer st = null;
@@ -30,7 +32,7 @@ public class prob17142 {
   static int[][] board;
   static int emptyCnt;
   static int[] selectedVirus;
-  static List<Node> virusList;
+  static List<Virus> virusList;
   static int ans;
 
   public static void main(String[] args) throws IOException {
@@ -50,15 +52,21 @@ public class prob17142 {
           emptyCnt++;
         }
         if (board[i][j] == 2) {
-          virusList.add(new Node(i, j, 0));
+          Virus v = new Virus(i, j, 0);
+          virusList.add(v);
         }
       }
     }
 
     ans = INF;
     selectedVirus = new int[M];
-    CombiInitVirus(0, 0);
 
+    if(emptyCnt == 0){
+      System.out.println(0);
+      return;
+    }
+
+    CombiInitVirus(0, 0);
     if (ans == INF) {
       ans = -1;
     }
@@ -82,35 +90,17 @@ public class prob17142 {
     int tmp = emptyCnt;
 
     boolean[][] visited = new boolean[N][N];
-    Queue<Node> q = new ArrayDeque<>();
+    Queue<Virus> q = new ArrayDeque<>();
 
-    List<Integer> disableList = new ArrayList<>();
-    for (int i = 0; i < virusList.size(); i++) {
-      disableList.add(i);
-    }
-
-    for (int i = virusList.size() - 1; i >= 0; i--) {
-      for (int j = 0; j < M; j++) {
-        if (selectedVirus[j] == disableList.get(i)) {
-          disableList.remove(i);
-          break;
-        }
-      }
-    }
-
+    
     for (int i = 0; i < M; i++) {
-      Node c = virusList.get(selectedVirus[i]);
+      Virus c = virusList.get(selectedVirus[i]);
       q.add(c);
       visited[c.x][c.y] = true;
     }
 
     while (!q.isEmpty()) {
-      Node cur = q.poll();
-
-      if (tmp == 0) {
-        ans = Math.min(ans, cur.depth);
-        return;
-      }
+      Virus cur = q.poll();
 
       for (int i = 0; i < 4; i++) {
         int newX = cur.x + d[0][i];
@@ -121,20 +111,19 @@ public class prob17142 {
         }
 
         if (board[newX][newY] == 2) {
-          for (int k = disableList.size() - 1; k >= 0; k--) {
-            if (virusList.get(k).x == newX && virusList.get(k).y == newY) {
-              q.add(new Node(newX, newY, cur.depth + 1));
-              visited[newX][newY] = true;
-              disableList.remove(k);
-              break;
-            }
-          }
+          q.add(new Virus(newX, newY, cur.depth + 1));
+          visited[newX][newY] = true;
         }
 
         if (board[newX][newY] == 0) {
-          q.add(new Node(newX, newY, cur.depth + 1));
+          q.add(new Virus(newX, newY, cur.depth + 1));
           visited[newX][newY] = true;
           tmp--;
+
+          if (tmp == 0) {
+            ans = Math.min(ans, cur.depth + 1);
+            return;
+          }
         }
       }
     }
