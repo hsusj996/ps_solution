@@ -8,7 +8,7 @@ public class Solution {
 	private final static int CMD_REMOVE = 300;
 	private final static int CMD_QUERY = 400;
 
-	private final static UserSolution usersolution = new UserSolution();
+	private final static UserSolution_성적열람 usersolution = new UserSolution_성적열람();
 
 	private static void String2Char(char[] buf, String str) {
 		for (int k = 0; k < str.length(); ++k)
@@ -77,7 +77,7 @@ public class Solution {
 	public static void main(String[] args) throws Exception {
 		int TC, MARK;
 
-		System.setIn(new java.io.FileInputStream("res/sample_input.txt"));
+		System.setIn(new java.io.FileInputStream("./sweaProSolution/res/sample_input.txt"));
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
