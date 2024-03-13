@@ -11,7 +11,7 @@ public class Solution {
     private static boolean run() throws Exception {
 
         int query_num = sc.nextInt();
-		int ans;
+        int ans;
         boolean ok = false;
 
         for (int q = 0; q < query_num; q++) {
@@ -21,7 +21,7 @@ public class Solution {
                 int N = sc.nextInt();
                 int L = sc.nextInt();
                 int mAbility[] = new int[N];
-                for (int i = 0; i < N; i++){
+                for (int i = 0; i < N; i++) {
                     mAbility[i] = sc.nextInt();
                 }
                 usersolution.init(N, L, mAbility);
