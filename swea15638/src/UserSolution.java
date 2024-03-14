@@ -1,7 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 class UserSolution {
     static class Monarch {
@@ -11,14 +10,14 @@ class UserSolution {
         int soldiers;
         boolean alive;
         int[] pos;
-        Set<Monarch> enemySet;
+        List<Monarch> enemyList;
 
         public Monarch(String name, int soldiers, boolean alive, int x, int y) {
             this.name = name;
             this.soldiers = soldiers;
             this.alive = alive;
             this.pos = new int[] { x, y };
-            this.enemySet = new HashSet<>();
+            this.enemyList = new ArrayList<>();
             this.parent = this;
             this.next = null;
         }
@@ -39,7 +38,7 @@ class UserSolution {
                 monarchMap.put(String.valueOf(mMonarch[i][j]), board[i][j]);
             }
         }
-//        PrintForDebug();
+        // PrintForDebug();
     }
 
     void destroy() {
@@ -59,8 +58,8 @@ class UserSolution {
         }
 
         // 적대관계가 있는지 확인
-        for (Iterator<Monarch> iter = m1Root.enemySet.iterator(); iter.hasNext();) {
-            Monarch enemyRoot = FindSet(iter.next());
+        for (Monarch cur : m1Root.enemyList) {
+            Monarch enemyRoot = FindSet(cur);
 
             if (enemyRoot.equals(m2Root)) {
                 return -2;
@@ -74,8 +73,8 @@ class UserSolution {
         }
 
         m1EndNode.next = m2Root;
-        m2Root.parent = m1;
-        m1.enemySet.addAll(m2Root.enemySet);
+        m2Root.parent = m1Root;
+        m1Root.enemyList.addAll(m2Root.enemyList);
 
         return 1;
     }
@@ -95,15 +94,15 @@ class UserSolution {
         // 동맹과 인접하는지 확인 (확인하면서 병사 모으기, 0명을 모을수도 있기 때문에 플래그 설정)
         int attackSoldiers = 0;
         boolean fightFlag = false;
-        for(int idx = 0;idx < 8; idx++){
+        for (int idx = 0; idx < 8; idx++) {
             int newX = m2.pos[0] + d[0][idx];
             int newY = m2.pos[1] + d[1][idx];
 
-            if(newX < 0 || newX >= n || newY < 0 || newY >= n){
+            if (newX < 0 || newX >= n || newY < 0 || newY >= n) {
                 continue;
             }
 
-            if(m1Root == FindSet(board[newX][newY])){
+            if (m1Root == FindSet(board[newX][newY])) {
                 fightFlag = true;
                 int tmp = board[newX][newY].soldiers / 2;
                 attackSoldiers += tmp;
@@ -111,26 +110,35 @@ class UserSolution {
             }
         }
 
-        if(!fightFlag){
+        if (!fightFlag) {
             return -2;
         }
 
         // 전투 시작
 
         // 적대 관계 설정
-        m1Root.enemySet.add(m2Root);
-        m2Root.enemySet.add(m1Root);
+        boolean flag1 = false;
+        for (Monarch cur : m1Root.enemyList) {
+            if (FindSet(cur) == m2Root) {
+                flag1 = true;
+                break;
+            }
+        }
+        if (!flag1) {
+            m1Root.enemyList.add(m2Root);
+            m2Root.enemyList.add(m1Root);
+        }
 
         // 방어측 군사 보내기
-        for(int idx = 0;idx < 8; idx++){
+        for (int idx = 0; idx < 8; idx++) {
             int newX = m2.pos[0] + d[0][idx];
             int newY = m2.pos[1] + d[1][idx];
 
-            if(newX < 0 || newX >= n || newY < 0 || newY >= n){
+            if (newX < 0 || newX >= n || newY < 0 || newY >= n) {
                 continue;
             }
 
-            if(m2Root == FindSet(board[newX][newY])){
+            if (m2Root == FindSet(board[newX][newY])) {
                 fightFlag = true;
                 int defenseSoldiers = board[newX][newY].soldiers / 2;
                 m2.soldiers += defenseSoldiers;
@@ -138,9 +146,9 @@ class UserSolution {
             }
         }
 
-        // 싸움 결과 
+        // 싸움 결과
         m2.soldiers -= attackSoldiers;
-        if(m2.soldiers < 0){    // 공격 승
+        if (m2.soldiers < 0) { // 공격 승
             m2.alive = false;
             Monarch m = new Monarch(String.valueOf(mGeneral), Math.abs(m2.soldiers), true, m2.pos[0], m2.pos[1]);
             board[m2.pos[0]][m2.pos[1]] = m;
@@ -149,10 +157,10 @@ class UserSolution {
             // m1과 동맹
             m.next = m1Root;
             m1Root.parent = m;
-            m.enemySet.addAll(m1Root.enemySet);
+            m.enemyList.addAll(m1Root.enemyList);
 
             return 1;
-        } else{
+        } else {
             return 0;
         }
     }
@@ -165,7 +173,8 @@ class UserSolution {
         } else if (mOption == 1) {
             int sum = 0;
             for (Monarch tmp = FindSet(m); tmp != null; tmp = tmp.next) {
-                if(!tmp.alive) continue;
+                if (!tmp.alive)
+                    continue;
                 sum += (tmp.soldiers += mNum);
             }
             return sum;
@@ -175,25 +184,20 @@ class UserSolution {
     }
 
     Monarch FindSet(Monarch m) {
-        try {
-            if (m.parent.equals(m)) {
-                return m;
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (m.parent.equals(m)) {
+            return m;
         }
 
         return m.parent = FindSet(m.parent);
     }
 
-    void PrintForDebug() {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.print(board[i][j].name + "/" + board[i][j].soldiers + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
+    // void PrintForDebug() {
+    // for (int i = 0; i < n; i++) {
+    // for (int j = 0; j < n; j++) {
+    // System.out.print(board[i][j].name + "/" + board[i][j].soldiers + " ");
+    // }
+    // System.out.println();
+    // }
+    // System.out.println();
+    // }
 }

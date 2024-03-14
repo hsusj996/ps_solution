@@ -36,7 +36,7 @@ public class prob1655 {
       if (maxHeap.size() > 0 && minHeap.size() > 0) {
         if (maxHeap.peek() > minHeap.peek()) {
           int i1 = maxHeap.poll();
-          int i2 = maxHeap.poll();
+          int i2 = minHeap.poll();
 
           maxHeap.add(i2);
           minHeap.add(i1);
