@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -21,6 +19,25 @@ public class prob3190 {
       this.x = x;
       this.y = y;
     }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + x;
+      result = prime * result + y;
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (!(obj instanceof xy)) {
+        return false;
+      }
+      xy o = (xy) obj;
+      return this.x == o.x && this.y == o.y ? true : false;
+    }
+
   }
 
   static class DirectionInfo {
@@ -74,8 +91,28 @@ public class prob3190 {
     while (true) {
       time++;
 
+      // 전진
+      snakeCurPos.x += d[0][snakeDirection];
+      snakeCurPos.y += d[1][snakeDirection];
+
+      if (GameOver()) {
+        break;
+      }
+
+      // 갈 수 있는 곳이기 때문에 갱신
+      if (appleSet.contains(snakeCurPos)) {
+        snakeQ.add(new xy(snakeCurPos.x, snakeCurPos.y));
+        board[snakeCurPos.x][snakeCurPos.y] = true;
+        appleSet.remove(snakeCurPos);
+      } else {
+        snakeQ.add(new xy(snakeCurPos.x, snakeCurPos.y));
+        board[snakeCurPos.x][snakeCurPos.y] = true;
+        xy tail = snakeQ.poll();
+        board[tail.x][tail.y] = false;
+      }
+
       // 방향 변경 확인
-      if (infoQ.peek().time == time) {
+      if (!infoQ.isEmpty() && infoQ.peek().time == time) {
         DirectionInfo d = infoQ.poll();
         if (d.direction == 'L') {
           snakeDirection += 3;
@@ -85,17 +122,16 @@ public class prob3190 {
           snakeDirection %= 4;
         }
       }
-
-      // 전진
-      int nextX = snakeCurPos.x + d[0][snakeDirection];
-      int nextY = snakeCurPos.y + d[1][snakeDirection];
     }
 
     System.out.println(time);
   }
 
   private static boolean GameOver() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'GameOver'");
+    return IsOutBound(snakeCurPos) || board[snakeCurPos.x][snakeCurPos.y] == true;
+  }
+
+  private static boolean IsOutBound(xy pos) {
+    return pos.x <= 0 || pos.x > N || pos.y <= 0 || pos.y > N;
   }
 }
