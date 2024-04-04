@@ -3,6 +3,7 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Stack;
 
 public class prob9252 {
   static String s1, s2;
@@ -29,16 +30,39 @@ public class prob9252 {
       }
     }
 
-    dfs(0, 0, "");
+    // 공통 수열 뽑아내기
+    String lcs = LCS();
 
     System.out.println(dp[size1][size2]);
+    System.out.println(lcs);
   }
 
-  private static void dfs(int x, int y, String lcs) {
-    for (int i = x; i <= size1; i++) {
-      for (int j = y; j <= size2; j++) {
+  private static String LCS() {
+    Stack<Character> stk = new Stack<>();
+    int x = size1;
+    int y = size2;
+    while (dp[x][y] > 0) {
+      int cur = dp[x][y];
 
+      if (cur == dp[x - 1][y]) {
+        x--;
+        continue;
       }
+      if (cur == dp[x][y - 1]) {
+        y--;
+        continue;
+      }
+
+      stk.add(s1.charAt(x - 1));
+      x--;
+      y--;
     }
+
+    StringBuilder ret = new StringBuilder();
+    while (!stk.isEmpty()) {
+      ret.append(stk.pop());
+    }
+
+    return ret.toString();
   }
 }
