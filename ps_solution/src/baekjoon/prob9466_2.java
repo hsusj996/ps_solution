@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-public class prob9466 {
+public class prob9466_2 {
   static int T;
   static StringBuilder sb = new StringBuilder();
   static StringTokenizer st = null;

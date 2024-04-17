@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
@@ -22,18 +23,19 @@ public class prob1202 {
 
     @Override
     public int compareTo(Jewel o) {
-      if (this.v == o.v) {
-        return this.m - o.m;
+      if (this.m == o.m) {
+        return o.v - this.v;
       }
 
-      return o.v - this.v;
+      return this.m - o.m;
     }
 
   }
 
   static StringTokenizer st = null;
-  static PriorityQueue<Jewel> pq = new PriorityQueue<>();
-  static List<Integer> bagList = new ArrayList<>();
+  static PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> o2 - o1);
+  static Jewel[] jewels;
+  static int[] bagArr;
   static int N, K;
 
   public static void main(String[] args) throws IOException {
@@ -43,54 +45,30 @@ public class prob1202 {
     N = Integer.parseInt(st.nextToken());
     K = Integer.parseInt(st.nextToken());
 
+    jewels = new Jewel[N];
     for (int i = 0; i < N; i++) {
       st = new StringTokenizer(br.readLine());
-      pq.add(new Jewel(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+      jewels[i] = new Jewel(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
     }
+    Arrays.sort(jewels);
 
+    bagArr = new int[K];
     for (int i = 0; i < K; i++) {
-      bagList.add(Integer.parseInt(br.readLine()));
+      bagArr[i] = Integer.parseInt(br.readLine());
     }
-    Collections.sort(bagList);
+    Arrays.sort(bagArr);
 
-    int sum = greedy();
-    System.out.println(sum);
-  }
+    long ans = 0;
+    for (int i = 0, j = 0; i < K; i++) {
+      while (j < N && jewels[j].m <= bagArr[i]) {
+        pq.add(jewels[j++].v);
+      }
 
-  private static int greedy() {
-    int ret = 0;
-    while (!pq.isEmpty()) {
-      Jewel j = pq.poll();
-
-      boolean can = binary_search(j.m);
-      if (can) {
-        ret += j.v;
+      if (!pq.isEmpty()) {
+        ans += pq.poll();
       }
     }
 
-    return ret;
-  }
-
-  private static boolean binary_search(int target) {
-    int start = 0;
-    int end = bagList.size() - 1;
-
-    while (start <= end) {
-      int mid = (start + end) / 2;
-
-      int midV = bagList.get(mid);
-      if (midV == target) {
-        bagList.remove(mid);
-        return true;
-      }
-
-      if (midV < target) {
-        start = mid + 1;
-      } else {
-        end = mid - 1;
-      }
-
-      // TODO: bs 나머지 처리
-    }
+    System.out.println(ans);
   }
 }
