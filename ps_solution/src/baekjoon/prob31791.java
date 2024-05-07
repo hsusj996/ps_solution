@@ -29,6 +29,7 @@ public class prob31791 {
   static int N, M;
   static int Tg, Tb, X, B;
   static Queue<xy> q = new ArrayDeque<>();
+  static Queue<xy> buildingQ = new ArrayDeque<>();
   static char[][] board;
   static boolean[][] danger;
 
@@ -60,32 +61,29 @@ public class prob31791 {
 
     bfs();
 
+    boolean flag = false;
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= M; j++) {
         if (board[i][j] != '*') {
+          flag = true;
           sb.append(i).append(" ").append(j).append("\n");
         }
       }
     }
 
-    System.out.println(sb.toString());
+    System.out.println(flag ? sb.toString() : -1);
   }
 
   private static void bfs() {
-    for (int t=0;t<Tb;t++) {
+    for (int t = 0; t <= Tg; t++) {
       // PrintForDebug();
+      while (!buildingQ.isEmpty() && buildingQ.peek().time == t) {
+        q.add(buildingQ.poll());
+      }
       int qSize = q.size();
-      xy next = q.peek();
-      if
 
       while (qSize-- > 0) {
         xy cur = q.poll();
-
-        if (cur.time > 0) {
-          cur.time--;
-          q.add(cur);
-          continue;
-        }
 
         board[cur.x][cur.y] = '*';
 
@@ -98,12 +96,13 @@ public class prob31791 {
           }
 
           xy next = new xy(nx, ny);
-          if (board[nx][ny] == '#') {
-            next.time = Tb;
-          }
-
           danger[nx][ny] = true;
-          q.add(next);
+          if (board[nx][ny] == '#') {
+            next.time = t + Tb + 1;
+            buildingQ.add(next);
+          } else {
+            q.add(next);
+          }
         }
       }
     }
