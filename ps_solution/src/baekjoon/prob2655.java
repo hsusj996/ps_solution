@@ -50,8 +50,13 @@ public class prob2655 {
     Arrays.sort(blockArr);
 
     for (int i = 1; i <= N; i++) {
+<<<<<<< Updated upstream
       if (dpHeight[i] == 0) {
         dpHeight[i] = dpFunc(i);
+=======
+      if (dpHeight[blockArr[i].no] == 0) {
+        dpHeight[blockArr[i].no] = dpFunc(i);
+>>>>>>> Stashed changes
       }
     }
 
@@ -65,14 +70,38 @@ public class prob2655 {
     }
 
     Stack<Integer> stk = new Stack<>();
+<<<<<<< Updated upstream
     for (int cur = maxIdx; cur != -1; cur = dpNo[cur]) {
       stk.push(blockArr[cur].no);
+=======
+    for (int cur = maxIdx; cur != 0; cur = dpNo[cur]) {
+      stk.push(cur);
+>>>>>>> Stashed changes
     }
 
     System.out.println(stk.size());
     while (!stk.isEmpty()) {
       System.out.println(stk.pop());
     }
+<<<<<<< Updated upstream
+=======
+  }
+
+  private static int dpFunc(int idx) {
+    for (int i = idx + 1; i <= N; i++) {
+      if (blockArr[i].a < blockArr[idx].a) {
+        if(dpHeight[i] == 0){
+          dpHeight[i] = dpFunc(i);
+        }
+        
+        dpNo[blockArr[idx].no] = blockArr[i].no;
+        return dpHeight[blockArr[idx].no] = dpHeight[i] + blockArr[idx].h;
+      }
+    }
+
+    dpNo[idx] = 0;
+    return dpHeight[idx] = blockArr[idx].h;
+>>>>>>> Stashed changes
   }
 
   private static int dpFunc(int idx) {

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class prob12015 {
-  private static final int INF = 1_000_000_000;
+  private static final int INF = Integer.MAX_VALUE;
   static int N;
   static int[] dp;
   static int max = 0;

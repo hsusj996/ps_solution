@@ -41,7 +41,7 @@ public class prob12100 {
     for (int i = 0; i < 4; i++) {
       int[][] newBoard = moveBoard(curBoard, i);
 
-      PrintForDebug(curBoard, newBoard, i, depth);
+      // PrintForDebug(curBoard, newBoard, i, depth);
 
       dfs(depth + 1, newBoard);
     }
@@ -114,6 +114,9 @@ public class prob12100 {
       Queue<Integer> resultQ = new ArrayDeque<>();
       int tmp = 0;
       for (int j = 0; j < N; j++) {
+        if(curBoard[i][j] == 0){
+          continue;
+        }
         if (tmp == 0) {
           tmp = curBoard[i][j];
           continue;
@@ -148,6 +151,9 @@ public class prob12100 {
       Queue<Integer> resultQ = new ArrayDeque<>();
       int tmp = 0;
       for (int i = N - 1; i >= 0; i--) {
+        if(curBoard[i][j] == 0){
+          continue;
+        }
         if (tmp == 0) {
           tmp = curBoard[i][j];
           continue;
@@ -167,7 +173,7 @@ public class prob12100 {
       for (int i = N - 1; i >= 0; i--) {
         if (resultQ.isEmpty()) {
           for (int k = i; k >= 0; k--) {
-            board[k][j] = 0;
+            curBoard[k][j] = 0;
           }
           break;
         }
@@ -182,6 +188,9 @@ public class prob12100 {
       Queue<Integer> resultQ = new ArrayDeque<>();
       int tmp = 0;
       for (int j = N - 1; j >= 0; j--) {
+        if(curBoard[i][j] == 0){
+          continue;
+        }
         if (tmp == 0) {
           tmp = curBoard[i][j];
           continue;
@@ -216,6 +225,9 @@ public class prob12100 {
       Queue<Integer> resultQ = new ArrayDeque<>();
       int tmp = 0;
       for (int i = 0; i < N; i++) {
+        if(curBoard[i][j] == 0){
+          continue;
+        }
         if (tmp == 0) {
           tmp = curBoard[i][j];
           continue;
@@ -235,7 +247,7 @@ public class prob12100 {
       for (int i = 0; i < N; i++) {
         if (resultQ.isEmpty()) {
           for (int k = i; k < N; k++) {
-            board[k][j] = 0;
+            curBoard[k][j] = 0;
           }
           break;
         }

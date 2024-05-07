@@ -41,7 +41,7 @@ public class prob1938 {
 
       Train o = (Train) obj;
 
-      if (this.center[0] == o.center[0] && this.center[1] == o.center[1] && this.center == o.center) {
+      if (this.center[0] == o.center[0] && this.center[1] == o.center[1] && this.state == o.state) {
         return true;
       }
 
@@ -74,13 +74,13 @@ public class prob1938 {
         if (board[i][j] == 'B') {
           int nx = i + d[0][1];
           int ny = j + d[1][1];
-          if (!IsOutBound(nx, ny) && board[nx][ny] == 'B') {
+          if (!checkPoint(nx, ny) && board[nx][ny] == 'B') {
             firstTrain = new Train(new int[] { nx, ny }, 0);
             break;
           }
           nx = i + d[0][2];
           ny = j + d[1][2];
-          if (!IsOutBound(nx, ny) && board[nx][ny] == 'B') {
+          if (!checkPoint(nx, ny) && board[nx][ny] == 'B') {
             firstTrain = new Train(new int[] { nx, ny }, 1);
             break;
           }
@@ -95,13 +95,13 @@ public class prob1938 {
         if (board[i][j] == 'E') {
           int nx = i + d[0][1];
           int ny = j + d[1][1];
-          if (!IsOutBound(nx, ny) && board[nx][ny] == 'E') {
+          if (!checkPoint(nx, ny) && board[nx][ny] == 'E') {
             dest = new Train(new int[] { nx, ny }, 0);
             break;
           }
           nx = i + d[0][2];
           ny = j + d[1][2];
-          if (!IsOutBound(nx, ny) && board[nx][ny] == 'E') {
+          if (!checkPoint(nx, ny) && board[nx][ny] == 'E') {
             dest = new Train(new int[] { nx, ny }, 1);
             break;
           }
@@ -116,7 +116,7 @@ public class prob1938 {
     visited[firstTrain.center[0]][firstTrain.center[1]][firstTrain.state] = true;
     bfs();
 
-    System.out.println(ans);
+    System.out.println(ans == Integer.MAX_VALUE ? 0 : ans);
     return;
   }
 
@@ -133,18 +133,26 @@ public class prob1938 {
         ans = curTrain.depth;
       }
 
+      // PrintForDebug(curTrain);
+
+      // 4방향 탐색
       for (int i = 0; i < 4; i++) {
         int nx = curTrain.center[0] + d[0][i];
         int ny = curTrain.center[1] + d[1][i];
-        int nx2 = nx + d[0][i];
-        int ny2 = ny + d[1][i];
 
-        if (IsOutBound(nx2, ny2) || visited[nx][ny][curTrain.state]) {
+        if (IsOutBound(nx, ny, curTrain.state) || visited[nx][ny][curTrain.state]) {
           continue;
         }
 
-        if (board[nx2][ny2] == '1') {
-          continue;
+        // 1 check
+        if (curTrain.state == 0) {
+          if (board[nx][ny + 1] == '1' || board[nx][ny - 1] == '1' || board[nx][ny] == '1') {
+            continue;
+          }
+        } else {
+          if (board[nx + 1][ny] == '1' || board[nx - 1][ny] == '1' || board[nx][ny] == '1') {
+            continue;
+          }
         }
 
         visited[nx][ny][curTrain.state] = true;
@@ -161,12 +169,12 @@ public class prob1938 {
 
       if (!visited[nTrain.center[0]][nTrain.center[1]][nTrain.state]) {
         boolean flag = false;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) { // 중심기준으로 9칸 영역 탐색
           for (int j = 0; j < 3; j++) {
             int cx = nTrain.center[0] - 1 + i;
             int cy = nTrain.center[1] - 1 + j;
 
-            if (IsOutBound(cx, cy) || board[cx][cy] == '1') {
+            if (checkPoint(cx, cy) || board[cx][cy] == '1') {
               flag = true;
               break;
             }
@@ -183,8 +191,49 @@ public class prob1938 {
     }
   }
 
-  private static boolean IsOutBound(int x, int y) {
+  private static boolean IsOutBound(int x, int y, int state) {
+    if (state == 0) {
+      if (checkPoint(x, y) || checkPoint(x, y - 1) || checkPoint(x, y + 1)) {
+        return true;
+      }
+    } else {
+      if (checkPoint(x, y) || checkPoint(x - 1, y) || checkPoint(x + 1, y)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private static boolean checkPoint(int x, int y) {
     return x < 0 || x >= N || y < 0 || y >= N;
+  }
+
+  private static void PrintForDebug(Train curTrain) {
+    StringBuilder sb = new StringBuilder();
+    char[][] tmpBoard = new char[N][N];
+    for (int i = 0; i < N; i++) {
+      tmpBoard[i] = board[i].clone();
+    }
+
+    tmpBoard[curTrain.center[0]][curTrain.center[1]] = 'C';
+    if (curTrain.state == 0) {
+      tmpBoard[curTrain.center[0]][curTrain.center[1] + 1] = 'C';
+      tmpBoard[curTrain.center[0]][curTrain.center[1] - 1] = 'C';
+    } else {
+      tmpBoard[curTrain.center[0] + 1][curTrain.center[1]] = 'C';
+      tmpBoard[curTrain.center[0] - 1][curTrain.center[1]] = 'C';
+    }
+
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        sb.append(tmpBoard[i][j]).append(" ");
+      }
+      sb.append("\n");
+    }
+
+    System.out.println(sb.toString());
+    System.out.println("----------------------------------");
   }
 
 }
