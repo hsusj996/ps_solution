@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.StringTokenizer;
+import java.awt.Point;
 
 public class Main {
     static final int INF = 1_000_000;
@@ -166,16 +167,5 @@ public class Main {
 
     private static boolean IsOutBound(int nx, int ny) {
         return nx < 0 || nx >= h + 2 || ny < 0 || ny >= w + 2;
-    }
-
-    static class Point {
-        int x;
-        int y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
     }
 }
