@@ -5,45 +5,39 @@ import java.util.Collections;
 import java.util.PriorityQueue;
 
 public class Main {
-  static StringBuilder result = new StringBuilder();
-  static PriorityQueue<Integer> maxHeap;
-  static PriorityQueue<Integer> minHeap;
-  static int N;
-  static int cnt;
+    static StringBuilder result = new StringBuilder();
+    static PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+    static PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+    static int N;
+    static int cnt;
 
-  public static void main(String[] args) throws NumberFormatException, IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws NumberFormatException, IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    // 초기화
-    maxHeap = new PriorityQueue<>(Collections.reverseOrder());
-    minHeap = new PriorityQueue<>();
-    cnt = 0;
+        N = Integer.parseInt(br.readLine());
+        for (int i = 0; i < N; i++) {
+            int n = Integer.parseInt(br.readLine());
 
-    N = Integer.parseInt(br.readLine());
-    for (int i = 0; i < N; i++) {
-      int n = Integer.parseInt(br.readLine());
-
-      // 삽입
-      if (maxHeap.size() == minHeap.size()) {
-        maxHeap.add(n);
-      } else {
-        minHeap.add(n);
-      }
-
-      // 삽입 후 peek 검사
-      if (maxHeap.size() > 0 && minHeap.size() > 0) {
-        if (maxHeap.peek() > minHeap.peek()) {
-          int i1 = maxHeap.poll();
-          int i2 = minHeap.poll();
-
-          maxHeap.add(i2);
-          minHeap.add(i1);
+            if(maxHeap.size() == minHeap.size()){
+                maxHeap.add(n);
+            } else{
+                minHeap.add(n);
+            }
+            
+            if(maxHeap.size() > 0 && minHeap.size() > 0){
+                if(maxHeap.peek() > minHeap.peek()){
+                    int i1 = maxHeap.poll();
+                    int i2 = minHeap.poll();
+                    
+                    maxHeap.add(i2);
+                    minHeap.add(i1);
+                }
+            }
+            
+            result.append(maxHeap.peek()).append("\n");
         }
-      }
 
-      result.append(maxHeap.peek()).append("\n");
+        System.out.println(result.toString());
     }
 
-    System.out.println(result);
-  }
 }
