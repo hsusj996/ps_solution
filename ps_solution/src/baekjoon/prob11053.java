@@ -24,12 +24,15 @@ public class prob11053 {
                 }
             }
 
-            if(max < dp[i]){
+            if (max < dp[i]) {
                 max = dp[i];
             }
         }
 
         System.out.println(max);
+        for (int i = 0; i <= N; i++) {
+            System.out.print(dp[i] + " ");
+        }
         sc.close();
     }
 }

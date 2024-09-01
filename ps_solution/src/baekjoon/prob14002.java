@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 public class prob14002 {
   static int N;
   static int[] dp;
+  static int[] prev;
   static int[] arr;
   static StringBuilder sb = new StringBuilder();
 
@@ -19,6 +20,7 @@ public class prob14002 {
     N = Integer.parseInt(br.readLine());
     StringTokenizer st = new StringTokenizer(br.readLine());
     arr = new int[N + 1];
+    prev = new int[N + 1];
     dp = new int[N + 1];
 
     for (int i = 1; i <= N; i++) {
@@ -32,6 +34,7 @@ public class prob14002 {
       for (int j = i - 1; j > 0; j--) {
         if (arr[j] < arr[i] && dp[i] < dp[j] + 1) {
           dp[i] = dp[j] + 1;
+          prev[i] = j;
         }
       }
     }
@@ -48,22 +51,16 @@ public class prob14002 {
 
     // 역순으로 탐색하면서 수열 저장
     Stack<Integer> stk = new Stack<>();
-    stk.add(arr[maxIdx]);
+    stk.add(maxIdx);
 
-    int prev = dp[maxIdx];
-    int prevIdx = maxIdx;
-    for (int i = maxIdx - 1; i > 0; i--) {
-      if (dp[i] == prev - 1 && arr[i] < arr[prevIdx]) {
-        stk.add(arr[i]);
-        prev--;
-        prevIdx = i;
-      }
+    while (prev[stk.peek()] != 0) {
+      stk.add(prev[stk.peek()]);
     }
 
     // 출력
     sb.append(dp[maxIdx]).append("\n");
     while (!stk.isEmpty()) {
-      sb.append(stk.pop()).append(" ");
+      sb.append(arr[stk.pop()]).append(" ");
     }
     System.out.println(sb.toString());
   }
